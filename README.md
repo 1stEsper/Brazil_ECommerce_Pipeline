@@ -38,7 +38,7 @@ Brazil_ECommerce_Pipeline/
 │   ├── ingest_to_gcs.py      # Uploads local CSVs to Google Cloud
 │   ├── validate_and_load.py  # Data Quality & Ingestion to Postgres
 │   └── init_db.sql           # Database schema initialization
-├── transform/
+├── transform/                # using dbt
 │   ├── analyses              # Some analyses (Retention Rate, Geo distribution)
 │   ├── models                # raw --> staging --> marts
 │   └── test                  # Automated data testing

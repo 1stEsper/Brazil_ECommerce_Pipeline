@@ -34,5 +34,18 @@ services:
     depends_on:
       - postgres
 
+  dbt: 
+    build: .
+    container_name: dbt_pipeline
+    volumes: 
+      - .:/usr/app
+      - ~/.dbt/profiles.yml:/root/.dbt/profiles.yml
+    depends_on: 
+      postgres:
+        condition: service_healthy
+    # Wait for the database to be ready, install the package, and build the project.
+    command: >
+      sh -c "uv run dbt deps &&  uv run dbt build"
+
 volumes:
   postgres_data:
