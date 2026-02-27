@@ -1,0 +1,10 @@
+version: 2
+
+sources: 
+  - name: olist_raw
+    schema: raw
+    tables: 
+      - name: orders
+      - name: products
+      - name: customers
+      - name: order_items
