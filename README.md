@@ -1,10 +1,10 @@
-# Brazil E-Commerce Data Pipeline (Olist)
+# Brazil E-commerce Analytics Stack: From Raw Data to Business Intelligence
 
 A robust Data Engineering pipeline designed to ingest, validate, and store Brazilian e-commerce data from local sources to a Cloud Data Lake and finally into a structured PostgreSQL Data Warehouse.
 
 
 ## Project Overview
-This project demonstrates an end-to-end ELT (Extract, Load, Transform) pattern using modern data stack tools. The goal is to handle the Olist dataset (100k+ orders) by ensuring data quality and proper schema management before analytical modeling.
+This project demonstrates an end-to-end ELT (Extract, Load, Transform) pattern using modern data stack tools. The goal is to handle the Olist dataset (100k+ orders) by ensuring data quality and proper schema management before analytical modeling (*Featuring Medallion Architecture, Star Schema modeling with dbt, and Dockerized deployment*.).
 
 
 ## Tech Stack
@@ -30,6 +30,12 @@ This project demonstrates an end-to-end ELT (Extract, Load, Transform) pattern u
 
 4. **Loading**: Efficiently loading cleaned data into the PostgreSQL raw schema using SQLAlchemy and Pandas.
 
+## Data quality features
+* **Primary Key Validation**: Ensures no duplicate IDs in core tables (orders, products, etc.).
+* **Schema Enforcement**: converts date columns from string to timestamp.
+* **Logic Checks**: Validates business logic (e.g., ensuring order_delivered_customer_date is not earlier than order_purchase_timestamp).
+* **Medallion Architecture**: Data is isolated into a ```raw``` schem, keeping it separate from future transformation layers.
+
 ## Project Structure
 ````
 Brazil_ECommerce_Pipeline/
@@ -45,7 +51,8 @@ Brazil_ECommerce_Pipeline/
 ├── terraform/
 │   ├── main.tf               # GCS Bucket resources
 │   └── variables.tf          # Terraform configurations
-├── docker-compose.yml        # PostgreSQL & pgAdmin setup
+├── docker-compose.yml        # PostgreSQL & pgAdmin and dbt setup
+├── Dockerfile                # dbt's Image
 ├── .env                      # Secret credentials
 ├── .gitignore                # Security configurations
 └── README.md
@@ -53,6 +60,7 @@ Brazil_ECommerce_Pipeline/
 
 ## Setup & Installation
 1. Infrastructure
+
 Initialize and apply Terraform to create the GCS bucket: 
 
 ``` 
@@ -61,22 +69,23 @@ terraform init
 terraform apply 
 ``` 
 
-2. Database Environment
-Build the PostgreSQL and pgAdmin containers: 
+2. Full Pipeline Deployment (Database & dbt)
+
+Build the PostgreSQL, pgAdmin and dbt containers: 
 ``` 
-docker compose up -d
+docker compose up --build
 ```
 
-3. Data pipeline 
-Install dependencies using ```uv``` n run the ingestion script: 
-``` 
-uv pip install -r requirements.txt
-python scripts/validate_and_load.py
-```  
 
-## Data quality features
-* **Primary Key Validation**: Ensures no duplicate IDs in core tables (orders, products, etc.).
-* **Schema Enforcement**: converts date columns from string to timestamp.
-* **Logic Checks**: Validates business logic (e.g., ensuring order_delivered_customer_date is not earlier than order_purchase_timestamp).
-* **Medallion Architecture**: Data is isolated into a ```raw``` schem, keeping it separate from future transformation layers.
+## Advanced Analytics
+Developed complex SQL queries using **Window Functions** and **CTEs** to perform **Cohort Analysis** (Retention rate) and Geographic Revenue distribution.
+- **Insights Delivered**: Identified that Sao Paulo (SP) accounts for over 37% of total revenue and discovered a low cusstomer retention rate, highlighting a significant opportunity for re-marketing strategies.
 
+
+## Key Achievements
+
+- Successfully built Star Schema for over 100,000 records.
+
+- Automated 100% of the process from Raw Data to Analytics.
+
+- Discovering insights from the dataset.
